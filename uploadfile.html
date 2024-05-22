@@ -83,7 +83,7 @@
         #progressBarFill {
             height: 100%;
             background-color: #4caf50;
-            width: 0;
+            width: 0; /* 初始宽度为0 */
             transition: width 0.3s ease;
         }
     </style>
@@ -121,30 +121,46 @@
             if (file) {
                 progressBarContainer.style.display = 'block'; // 显示进度条
                 
-                var reader = new FileReader();
-                
-                reader.onload = function(e) {
-                    progressBarContainer.style.display = 'none'; // 隐藏进度条
+                var progress = 0;
+                var interval = setInterval(function() {
+                    progress += 10; // 每次增加10%
+                    progressBarFill.style.width = progress + '%'; // 更新进度条宽度
                     
-                    var fileContent = e.target.result;
-                    var customMessage = 'Upload successful!!!\n';
-                    customMessage += 'RESULTS:\n' + fileContent;
-
-                    // 输出自定义信息到页面
-                    output.textContent = customMessage;
-                };
-                
-                reader.onerror = function(e) {
-                    progressBarContainer.style.display = 'none'; // 隐藏进度条
-                    output.textContent = 'Error reading file';
-                };
-                
-                reader.readAsText(file);
+                    if (progress >= 100) {
+                        clearInterval(interval); // 停止增加进度
+                        
+                        // 上传完成后隐藏进度条
+                        progressBarContainer.style.display = 'none';
+                        
+                        // 上传完成后显示文件内容
+                        displayFileContent(file);
+                    }
+                }, 500); // 每500ms增加一次进度
             } else {
                 // 输出没有选择文件的信息
                 output.textContent = 'No file selected. Please choose a file to upload.';
             }
         });
+        
+        function displayFileContent(file) {
+            var output = document.getElementById('output');
+            var reader = new FileReader();
+            
+            reader.onload = function(e) {
+                var fileContent = e.target.result;
+                var customMessage = 'Upload successful!!!\n';
+                customMessage += 'RESULTS:\n' + fileContent;
+
+                // 输出自定义信息到页面
+                output.textContent = customMessage;
+            };
+            
+            reader.onerror = function(e) {
+                output.textContent = 'Error reading file';
+            };
+            
+            reader.readAsText(file);
+        }
     </script>
 </body>
 </html>
