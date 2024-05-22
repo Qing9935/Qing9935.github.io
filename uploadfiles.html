@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>File Upload Form</title>
+    <style>
+        .output {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+    </style>
 </head>
 <body>
     <h2>Upload a File</h2>
@@ -13,22 +21,28 @@
         <button type="submit">Upload</button>
     </form>
 
+    <div id="output" class="output"></div>
+
     <script>
         document.getElementById('uploadForm').addEventListener('submit', function(event) {
             event.preventDefault(); // 阻止表单的默认提交行为
             
-            // 获取选择的文件信息
+            var output = document.getElementById('output');
             var fileInput = document.getElementById('fileInput');
             var file = fileInput.files[0];
             
             if (file) {
-                console.log('File name: ' + file.name);
-                console.log('File size: ' + file.size + ' bytes');
-                console.log('File type: ' + file.type);
-                alert('File name: ' + file.name + '\nFile size: ' + file.size + ' bytes\nFile type: ' + file.type);
+                // 构建自定义信息
+                var customMessage = 'You have selected a file with the following details:\n';
+                customMessage += 'File Name: ' + file.name + '\n';
+                customMessage += 'File Size: ' + (file.size / 1024).toFixed(2) + ' KB\n';
+                customMessage += 'File Type: ' + file.type;
+                
+                // 输出自定义信息到页面
+                output.textContent = customMessage;
             } else {
-                console.log('No file selected.');
-                alert('No file selected.');
+                // 输出没有选择文件的信息
+                output.textContent = 'No file selected. Please choose a file to upload.';
             }
         });
     </script>
