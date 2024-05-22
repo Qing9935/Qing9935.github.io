@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload Form</title>
+    <style>
+        .output {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            white-space: pre-wrap; /* 保持换行格式 */
+        }
+    </style>
+</head>
+<body>
+    <h2>Upload a File</h2>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <label for="fileInput">Choose a file:</label>
+        <input type="file" id="fileInput" name="file" placeholder="Choose a file" />
+        <button type="submit">Upload</button>
+    </form>
+
+    <div id="output" class="output"></div>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // 阻止表单的默认提交行为
+            
+            var output = document.getElementById('output');
+            var fileInput = document.getElementById('fileInput');
+            var file = fileInput.files[0];
+            
+            if (file) {
+                var reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    var fileContent = e.target.result;
+                    var customMessage = 'Upload successful!!!\n';//file with the following details:\n';
+                   // customMessage += 'File Name: ' + file.name + '\n';
+                    //customMessage += 'File Size: ' + (file.size / 1024).toFixed(2) + ' KB\n';
+                    //customMessage += 'File Type: ' + file.type + '\n\n';
+                    customMessage += 'RESULTS:\n' + fileContent;
+
+                    // 输出自定义信息到页面
+                    output.textContent = customMessage;
+                };
+                
+                reader.onerror = function(e) {
+                    output.textContent = 'Error reading file';
+                };
+                
+                // 读取文件内容
+                reader.readAsText(file);
+            } else {
+                // 输出没有选择文件的信息
+                output.textContent = 'No file selected. Please choose a file to upload.';
+            }
+        });
+    </script>
+</body>
+</html>
